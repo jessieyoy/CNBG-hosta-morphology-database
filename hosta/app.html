@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">```javascript</span></p>
+<p class="p1"><span class="s1">// 假设你的 JSON 数据变量名为 `morphologyData`</span></p>
+<p class="p1"><span class="s1">// 如果数据在单独的JSON文件中，你可能需要使用 `fetch()` API 来加载它。</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// 初始化表格</span></p>
+<p class="p1"><span class="s1">var table = new Tabulator("#data-table", {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>data: morphologyData, // 将数据赋给表格</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>layout: "fitColumns", // 列宽自适应</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>pagination: "local", // 分页</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>paginationSize: 20, // 每页显示20行</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>movableColumns: true, // 可移动列</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>columns: [ // 定义列</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>{title: "品种", field: "品种", headerFilter: "input", frozen: true}, // 冻结第一列</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 动态生成其他指标的列</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// ... 你可以手动列出，或者用JS循环自动生成</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>{title: "叶长 (cm)", field: "叶长", headerFilter: "number"},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>{title: "叶宽 (cm)", field: "叶宽", headerFilter: "number"},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// ... 其他29个指标</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>],</span></p>
+<p class="p1"><span class="s1">});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// 添加一个全局的筛选器，例如按品种名筛选</span></p>
+<p class="p1"><span class="s1">document.getElementById("name-filter").addEventListener("input", function(e){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>table.setFilter("品种", "like", e.target.value);</span></p>
+<p class="p1"><span class="s1">});</span></p>
+<p class="p1"><span class="s1">```</span></p>
+<p class="p1"><span class="s1">```javascript</span></p>
+<p class="p1"><span class="s1">// 初始化图表</span></p>
+<p class="p1"><span class="s1">var myChart = echarts.init(document.getElementById('chart-container'));</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// 假设我们想绘制一个“品种” vs “叶长和叶宽”的柱状图</span></p>
+<p class="p1"><span class="s1">function updateChart() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// 从表格获取当前过滤和排序后的数据</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>var currentData = table.getData();</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>var varieties = currentData.map(item =&gt; item.品种);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>var leafLengths = currentData.map(item =&gt; item.叶长);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>var leafWidths = currentData.map(item =&gt; item.叶宽);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>var option = {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>title: { text: '品种叶形指标对比' },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>tooltip: {},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>legend: { data: ['叶长', '叶宽'] },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>xAxis: { data: varieties },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>yAxis: {},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>series: [</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ name: '叶长', type: 'bar', data: leafLengths },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ name: '叶宽', type: 'bar', data: leafWidths }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>]</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>myChart.setOption(option);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// 当表格数据变化（排序、筛选）时，更新图表</span></p>
+<p class="p1"><span class="s1">table.on("dataChanged", function(){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>updateChart();</span></p>
+<p class="p1"><span class="s1">});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// 初始化时绘制一次图表</span></p>
+<p class="p1"><span class="s1">updateChart();</span></p>
+<p class="p1"><span class="s1">```</span></p>
+</body>
+</html>
